@@ -1,0 +1,17 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://root:admin123@localhost:27017/authdb?authSource=admin    
+  application:
+    name: auth-service
+server:
+  port: 8094
+jwt:
+  secret: c9998dbc291932efc08976fbfa62e55567176134c70f34a200b0b6883f19f30c
+  token:
+    validity: 18000000
+
+#eureka:
+#   client:
+#      serviceUrl:
+#         defaultZone: http://${EUREKA_SERVER:localhost}:8761/eureka
