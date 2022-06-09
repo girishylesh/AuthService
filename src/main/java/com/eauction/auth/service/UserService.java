@@ -18,7 +18,7 @@ public class UserService {
 
 	public User findByUserIdAndPassword(String userId, String password) throws UserNotFoundException {
 
-		User user = userRepository.findByIdAndPassword(userId, password);
+		User user = userRepository.findByUserIdAndUserPassword(userId, password);
 		if (user == null) {
 			throw new UserNotFoundException("User not found");
 		}
@@ -40,7 +40,7 @@ public class UserService {
 	public boolean saveUser(User user) throws UserAlreadyExistsException {
 		try {
 
-			Optional<User> existingUser = userRepository.findById(user.getId());
+			Optional<User> existingUser = userRepository.findById(user.getUserId());
 			if (existingUser != null && existingUser.isPresent()) {
 				throw new UserAlreadyExistsException("User already exist");
 			}

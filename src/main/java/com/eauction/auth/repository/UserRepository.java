@@ -8,6 +8,6 @@ import com.eauction.auth.entity.User;
 @Repository
 public interface UserRepository extends MongoRepository<User, String> {
     
-    User findByIdAndPassword(String userId, String userPassword);
+    User findByUserIdAndUserPassword(String userId, String userPassword);
     
 }

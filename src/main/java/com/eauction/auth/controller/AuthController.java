@@ -27,7 +27,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/e-auction/api/v1/auth")
 public class AuthController {
 	
 	@Value("${jwt.secret}")
@@ -50,7 +50,7 @@ public class AuthController {
 	@PostMapping("/register")
 	public ResponseEntity<User> registerUser(@RequestBody User user) {
 		try {
-			user.setRole(Optional.ofNullable(user.getRole()).orElse(UserRole.USER));
+			user.setUserRole(Optional.ofNullable(user.getUserRole()).orElse(UserRole.USER));
 			user.setCreateDate(LocalDate.now());
 			userService.saveUser(user);
 			return new ResponseEntity<User>(user, HttpStatus.CREATED);
@@ -70,10 +70,10 @@ public class AuthController {
 	public ResponseEntity<?> login(@RequestBody User user) throws ServletException {
 		String jwtToken = "";
 		try {
-			jwtToken = getToken(user.getId(), user.getPassword());
+			jwtToken = getToken(user.getUserId(), user.getUserPassword());
 			map.clear();
 			map.put("message", "Login successfull");
-			map.put("currentUser", user.getId());
+			map.put("currentUser", user.getUserId());
 			map.put("token", jwtToken);
 		} catch (Exception e) {
 			String exceptionMessage = e.getMessage();
@@ -102,7 +102,7 @@ public class AuthController {
 		String jwtToken = null;
 		try {
 			user = userService.findByUserIdAndPassword(username, password);
-			jwtToken = Jwts.builder().setSubject(user.getId()).setIssuedAt(new Date())
+			jwtToken = Jwts.builder().setSubject(user.getUserId()).setIssuedAt(new Date())
 					.setExpiration(new Date(System.currentTimeMillis() + tokenValidity))
 					.signWith(SignatureAlgorithm.HS256, jwtSecret).compact();
 		} catch (UserNotFoundException unfe) {

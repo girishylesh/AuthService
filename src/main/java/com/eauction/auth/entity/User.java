@@ -17,8 +17,8 @@ import lombok.Setter;
 @Document("User")
 public class User {
 	@Id
-	private String id;
-	private String password;
-	private UserRole role;
+	private String userId;
+	private String userPassword;
+	private UserRole userRole;
 	private LocalDate createDate;
 }
