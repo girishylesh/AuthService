@@ -1,0 +1,15 @@
+spring:
+  mongodb:
+    embedded:
+      version: 3.4.5  
+  application:
+    name: auth-service
+jwt:
+  secret: ${JWT_SECRET:xyz}
+  token:
+    validity: 18000000
+
+#eureka:
+#   client:
+#      registerWithEureka: false
+#      fetchRegistry: false
