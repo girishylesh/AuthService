@@ -5,29 +5,29 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.eauction.auth.entity.User;
+import com.eauction.auth.entity.AuthUser;
 import com.eauction.auth.exception.UserAlreadyExistsException;
 import com.eauction.auth.exception.UserNotFoundException;
-import com.eauction.auth.repository.UserRepository;
+import com.eauction.auth.repository.AuthUserRepository;
 
 @Service
-public class UserService {
+public class AuthUserService {
 
 	@Autowired
-	private UserRepository userRepository;
+	private AuthUserRepository userRepository;
 
-	public User findByUserIdAndPassword(String userId, String password) throws UserNotFoundException {
+	public AuthUser findByUserIdAndPassword(String userId, String password) throws UserNotFoundException {
 
-		User user = userRepository.findByUserIdAndUserPassword(userId, password);
+		AuthUser user = userRepository.findByUserIdAndUserPassword(userId, password);
 		if (user == null) {
 			throw new UserNotFoundException("User not found");
 		}
 		return user;
 	}
 
-	public User getUserById(String userId) throws UserNotFoundException {
+	public AuthUser getUserById(String userId) throws UserNotFoundException {
 		try {
-			Optional<User> user = userRepository.findById(userId);
+			Optional<AuthUser> user = userRepository.findById(userId);
 			if (user == null || !user.isPresent()) {
 				throw new UserNotFoundException("user not found");
 			}
@@ -37,10 +37,10 @@ public class UserService {
 		}
 	}
 
-	public boolean saveUser(User user) throws UserAlreadyExistsException {
+	public boolean saveUser(AuthUser user) throws UserAlreadyExistsException {
 		try {
 
-			Optional<User> existingUser = userRepository.findById(user.getUserId());
+			Optional<AuthUser> existingUser = userRepository.findById(user.getUserId());
 			if (existingUser != null && existingUser.isPresent()) {
 				throw new UserAlreadyExistsException("User already exist");
 			}
@@ -51,7 +51,7 @@ public class UserService {
 		return true;
 	}
 
-	public User updateUser(String userId, User user) throws UserNotFoundException {
+	public AuthUser updateUser(String userId, AuthUser user) throws UserNotFoundException {
 		if (userRepository.existsById(userId)) {
 			return userRepository.save(user);
 		}

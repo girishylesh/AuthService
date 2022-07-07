@@ -1,6 +1,6 @@
 package com.eauction.auth.controller;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.eauction.auth.entity.User;
+import com.eauction.auth.entity.AuthUser;
 import com.eauction.auth.enums.UserRole;
 import com.eauction.auth.exception.UserAlreadyExistsException;
 import com.eauction.auth.exception.UserNotFoundException;
-import com.eauction.auth.service.UserService;
+import com.eauction.auth.service.AuthUserService;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -41,7 +41,7 @@ public class AuthController {
 	Map<String, String> map = new HashMap<>();
 
 	@Autowired
-	private UserService userService;
+	private AuthUserService userService;
 
 	/**
 	 * Method to register user
@@ -50,14 +50,14 @@ public class AuthController {
 	 * @return Response Status
 	 */
 	@PostMapping("/register")
-	public ResponseEntity<User> registerUser(@RequestBody User user) {
+	public ResponseEntity<AuthUser> registerUser(@RequestBody AuthUser user) {
 		try {
 			user.setUserRole(Optional.ofNullable(user.getUserRole()).orElse(UserRole.USER));
-			user.setCreateDate(LocalDate.now());
+			user.setCreateDateTime(LocalDateTime.now());
 			userService.saveUser(user);
-			return new ResponseEntity<User>(user, HttpStatus.CREATED);
+			return new ResponseEntity<AuthUser>(user, HttpStatus.CREATED);
 		} catch (UserAlreadyExistsException unfe) {
-			return new ResponseEntity<User>(HttpStatus.CONFLICT);
+			return new ResponseEntity<AuthUser>(HttpStatus.CONFLICT);
 		}
 	}
 
@@ -69,7 +69,7 @@ public class AuthController {
 	 * @throws ServletException
 	 */
 	@PostMapping("/login")
-	public ResponseEntity<?> login(@RequestBody User user) throws ServletException {
+	public ResponseEntity<?> login(@RequestBody AuthUser user) throws ServletException {
 		String jwtToken = "";
 		try {
 			jwtToken = getToken(user.getUserId(), user.getUserPassword());
@@ -100,7 +100,7 @@ public class AuthController {
 		if (username == null || password == null) {
 			throw new ServletException("Please fill in username and password");
 		}
-		User user = null;
+		AuthUser user = null;
 		String jwtToken = null;
 		try {
 			user = userService.findByUserIdAndPassword(username, password);
