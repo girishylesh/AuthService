@@ -15,8 +15,3 @@ aws:
   dynamodb:
     endpoint:
       url: ${AWS_DYNAMODB_URL:http://localhost:8000/}
-      
-#eureka:
-#   client:
-#      serviceUrl:
-#         defaultZone: http://${EUREKA_SERVER:localhost}:8761/eureka
